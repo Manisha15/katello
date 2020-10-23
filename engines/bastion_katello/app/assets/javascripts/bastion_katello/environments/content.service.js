@@ -60,7 +60,13 @@
                 resource: 'ModuleStream',
                 display: translate('Module Streams'),
                 repositoryType: 'yum'
+            }, {
+                state: 'debs',
+                resource: 'Deb',
+                display: translate('Deb Packages'),
+                repositoryType: 'deb'
             }
+
         ];
 
         this.getNoRowsMessage = function () {

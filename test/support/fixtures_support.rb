@@ -64,6 +64,8 @@ module Katello
       :katello_smart_proxies => SmartProxy,
       :katello_smart_proxy_features => SmartProxyFeature,
       :katello_features => Feature
+      :katello_content_view_deb_filter_rules => Katello::ContentViewDebFilterRule,
+      :katello_debs => Katello::Deb
     }.freeze
 
     # rubocop:disable Naming/AccessorMethodName

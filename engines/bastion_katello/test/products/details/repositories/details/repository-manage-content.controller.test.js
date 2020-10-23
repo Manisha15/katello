@@ -61,6 +61,7 @@ describe('Controller: RepositoryManageContentController', function() {
             AnsibleCollection: AnsibleCollection,
             GenericContent: GenericContent,
             RepositoryTypesService: RepositoryTypesService
+            Deb: Deb
         });
     }));
 
@@ -106,6 +107,11 @@ describe('Controller: RepositoryManageContentController', function() {
         expect(manifest.unselectable).not.toBe(true);
 
         $scope.currentState = "packages";
+        manifest = {manifest_lists: [1]};
+        $scope.updateSelectable(manifest);
+        expect(manifest.unselectable).not.toBe(true);
+
+        $scope.currentState = "debs";
         manifest = {manifest_lists: [1]};
         $scope.updateSelectable(manifest);
         expect(manifest.unselectable).not.toBe(true);
