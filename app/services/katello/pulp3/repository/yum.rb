@@ -140,8 +140,6 @@ module Katello
           tasks = []
           # Don't chunk if there aren't enough content units
           if data.config.sum { |repo_config| repo_config[:content].size } <= UNIT_LIMIT
-            Rails.logger.warn("**************** rpm daata #{data}")
-            Rails.logger.warn("***************** api call #{api.copy_api.copy_content(data)}")
             return api.copy_api.copy_content(data)
           end
 
@@ -163,8 +161,6 @@ module Katello
             data_dup.config[i][:content] = leftover_units.pop(copy_amount)
             unit_copy_counter += copy_amount
             if unit_copy_counter != 0
-              Rails.logger.warn("**************** rpm daata #{data_dup}")
-              Rails.logger.warn("**************** rpm daata #{api.copy_api.copy_content(data_dup)}")
               tasks << api.copy_api.copy_content(data_dup)
               unit_copy_counter = 0
             end
@@ -362,6 +358,7 @@ module Katello
           end
           content_unit_hrefs += source_repository.srpms.pluck(:pulp_id)
           dependency_solving = options[:solve_dependencies] || false
+          Rails.logger.warn("*************** rpms copy #{content_unit_hrefs}")
           copy_units(source_repository, content_unit_hrefs.uniq, dependency_solving)
         end
 

@@ -38,6 +38,10 @@ module Actions
           if input[:unit_map][:rpms].any?
             unit_hrefs << ::Katello::Rpm.where(:id => input[:unit_map][:rpms]).map(&:pulp_id)
           end
+
+          if input[:unit_map][:debs].any?
+            unit_hrefs << ::Katello::Deb.where(:id => input[:unit_map][:debs]).map(&:pulp_id)
+          end
           unit_hrefs.flatten!
 
           repo_map.each do |_source_repos, dest_repo_map|

@@ -96,8 +96,6 @@ module Katello
           tasks = []
           # Don't chunk if there aren't enough content units
           if data.config.sum { |repo_config| repo_config[:content].size } <= UNIT_LIMIT
-            Rails.logger.warn("**************** deb daata #{data}")
-            Rails.logger.warn("***************** api call #{api.copy_api.copy_content(data)}")
             return api.copy_api.copy_content(data)
           end
 
@@ -119,8 +117,6 @@ module Katello
             data_dup.config[i][:content] = leftover_units.pop(copy_amount)
             unit_copy_counter += copy_amount
             if unit_copy_counter != 0
-              Rails.logger.warn("**************** deb daata #{data_dup}")
-              Rails.logger.warn("**************** deb daata #{api.copy_api.copy_content(data_dup)}")
               tasks << api.copy_api.copy_content(data_dup)
               unit_copy_counter = 0
             end
@@ -186,7 +182,7 @@ module Katello
 
         def copy_content_from_mapping(repo_id_map, options = {})
           repo_id_map.each do |source_repo_ids, dest_repo_map|
-            filters = ContentViewDebFilter.where(:id => options[:filter_ids])
+            filters = ContentViewDebFilter.where(:id => dest_repo_map[:filter_ids])
 
             filter_list_map = { whitelist_ids: [], blacklist_ids: [] }
             filter_list_map = add_filter_content(source_repo_ids, filters, filter_list_map)
@@ -204,29 +200,27 @@ module Katello
           multi_copy_units(repo_id_map, dependency_solving)
         end
 
-        def copy_units(source_repository, content_unit_hrefs, remove_all)
-          remove_all = true if remove_all.nil?
+        def copy_units(source_repository, content_unit_hrefs, dependency_solving)
           tasks = []
 
           if content_unit_hrefs.sort!.any?
-            first_slice = remove_all
-            content_unit_hrefs.each_slice(UNIT_LIMIT) do |slice|
-              Rails.logger.warn("**************** deb add content #{slice}")
-              tasks << add_content(slice, first_slice)
-              first_slice = false
-            end
+            data = PulpDebClient::Copy.new
+            data.config = [{
+              source_repo_version: source_repository.version_href,
+              dest_repo: repository_reference.repository_href,
+              content: content_unit_hrefs
+            }]
+            data.dependency_solving = dependency_solving
+            tasks << api.copy_api.copy_content(data)
           else
             tasks << remove_all_content
           end
           tasks
-
         end
 
         def copy_content_for_source(source_repository, options = {})
           # copy_units_by_href(source_repository.debs.pluck(:pulp_id))
           filters = ContentViewDebFilter.where(:id => options[:filter_ids])
-          
-          Rails.logger.warn("************************ options are #{filters}")
 
           whitelist_ids = []
           blacklist_ids = []
@@ -241,8 +235,8 @@ module Katello
           whitelist_ids = source_repository.debs.pluck(:pulp_id).sort if (whitelist_ids.empty? && filters.select { |filter| filter.inclusion }.empty?)
 
           content_unit_hrefs = whitelist_ids - blacklist_ids
-
-          copy_units(source_repository, content_unit_hrefs.uniq, options[:remove_all])
+          dependency_solving = options[:solve_dependencies] || false
+          copy_units(source_repository, content_unit_hrefs.uniq, dependency_solving)
         end
 
         def regenerate_applicability
