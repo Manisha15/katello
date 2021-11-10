@@ -14,6 +14,7 @@ const typeName = (type, errataByDate) => {
     erratum: __('Errata'),
     erratum_date: __('Errata - Date and Type'),
     erratum_id: __('Errata - Id'),
+    deb: __('Deb'),
   };
 
   if (Object.prototype.hasOwnProperty.call(nameMap, type)) return nameMap[type];

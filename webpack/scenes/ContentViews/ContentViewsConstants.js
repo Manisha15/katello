@@ -60,7 +60,7 @@ export const NOT_ADDED = __('Not added');
 export const ALL_STATUSES = __('All');
 
 export const REPOSITORY_TYPES = 'REPOSITORY_TYPES';
-export const FILTER_TYPES = ['rpm', 'package_group', 'erratum_date', 'erratum_id', 'docker', 'modulemd'];
+export const FILTER_TYPES = ['rpm', 'package_group', 'erratum_date', 'erratum_id', 'docker', 'modulemd', 'deb'];
 
 export const ERRATA_TYPES = ['enhancement', 'security', 'bugfix'];
 
