@@ -29,7 +29,8 @@ module Katello
       self.deb_rules.each do |rule|
         deb_filenames.concat(query_debs(repo, rule))
       end
-      deb_filenames.sort
+      debs = Deb.in_repositories(repo)
+      debs.where(filename: deb_filenames).pluck(:pulp_id).flatten.uniq
     end
 
     def self.generate_deb_clauses(package_filenames = [])

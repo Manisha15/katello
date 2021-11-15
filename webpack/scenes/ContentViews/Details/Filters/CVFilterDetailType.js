@@ -7,6 +7,7 @@ import CVContainerImageFilterContent from './CVContainerImageFilterContent';
 import CVModuleStreamFilterContent from './CVModuleStreamFilterContent';
 import CVErrataIDFilterContent from './CVErrataIDFilterContent';
 import CVErrataDateFilterContent from './CVErrataDateFilterContent';
+import CVDebFilterContent from './CVDebFilterContent';
 
 const CVFilterDetailType = ({
   cvId, filterId, inclusion, type, showAffectedRepos, setShowAffectedRepos, rules,
@@ -51,6 +52,14 @@ const CVFilterDetailType = ({
           setShowAffectedRepos={setShowAffectedRepos}
         />);
       }
+    case 'deb':
+      return (<CVDebFilterContent
+        cvId={cvId}
+        filterId={filterId}
+        inclusion={inclusion}
+        showAffectedRepos={showAffectedRepos}
+        setShowAffectedRepos={setShowAffectedRepos}
+      />);
       return (<CVErrataIDFilterContent
         cvId={cvId}
         filterId={filterId}
