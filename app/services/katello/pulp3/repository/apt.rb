@@ -204,22 +204,23 @@ module Katello
           multi_copy_units(repo_id_map, dependency_solving)
         end
 
-        def copy_units(source_repository, content_unit_hrefs, remove_all)
-          remove_all = true if remove_all.nil?
+        def copy_units(source_repository, content_unit_hrefs, dependency_solving)
           tasks = []
 
           if content_unit_hrefs.sort!.any?
-            first_slice = remove_all
-            content_unit_hrefs.each_slice(UNIT_LIMIT) do |slice|
-              Rails.logger.warn("**************** deb add content #{slice}")
-              tasks << add_content(slice, first_slice)
-              first_slice = false
-            end
+            data = PulpDebClient::Copy.new
+            data.config = [{
+              source_repo_version: source_repository.version_href,
+              dest_repo: repository_reference.repository_href,
+              dest_base_version: 0,
+              content: content_unit_hrefs
+            }]
+            data.dependency_solving = dependency_solving
+            tasks << api.copy_api.copy_content(data)
           else
             tasks << remove_all_content
           end
           tasks
-
         end
 
         def copy_content_for_source(source_repository, options = {})
@@ -241,8 +242,8 @@ module Katello
           whitelist_ids = source_repository.debs.pluck(:pulp_id).sort if (whitelist_ids.empty? && filters.select { |filter| filter.inclusion }.empty?)
 
           content_unit_hrefs = whitelist_ids - blacklist_ids
-
-          copy_units(source_repository, content_unit_hrefs.uniq, options[:remove_all])
+          dependency_solving = options[:solve_dependencies] || false
+          copy_units(source_repository, content_unit_hrefs.uniq, dependency_solving)
         end
 
         def regenerate_applicability

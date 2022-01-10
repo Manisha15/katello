@@ -2,14 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import CVPackageGroupFilterContent from './CVPackageGroupFilterContent';
 import CVRpmFilterContent from './CVRpmFilterContent';
-<<<<<<< HEAD
-=======
-import CVContainerImageFilterContent from './CVContainerImageFilterContent';
-import CVModuleStreamFilterContent from './CVModuleStreamFilterContent';
-import CVErrataIDFilterContent from './CVErrataIDFilterContent';
-import CVErrataDateFilterContent from './CVErrataDateFilterContent';
-import CVDebFilterContent from './CVDebFilterContent';
->>>>>>> c521239... deb filter
 
 const CVFilterDetailType = ({
   cvId, filterId, inclusion, type,
