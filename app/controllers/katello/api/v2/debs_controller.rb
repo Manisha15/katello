@@ -51,7 +51,7 @@ module Katello
     end
 
     def available_for_content_view_version(version)
-      version.available_packages
+      version.available_debs
     end
 
     def custom_index_relation(collection)

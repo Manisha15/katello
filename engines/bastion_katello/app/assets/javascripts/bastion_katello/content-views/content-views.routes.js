@@ -160,21 +160,21 @@ angular.module('Bastion.content-views').config(['$stateProvider', function ($sta
             parent: 'content-view.version.details'
         }
     })
-    .state('content-view.version.apt', {
-        url: '/apt',
-        permission: 'view_content_views',
-        controller: 'ContentViewVersionContentController',
-        templateUrl: 'content-views/versions/views/content-view-version-apt.html',
-        ncyBreadcrumb: {
-            label: '{{ "Apt Repositories" | translate }}',
-            parent: 'content-view.version.details'
-        }
-    })
     .state('content-view.version.deb', {
         url: '/deb',
         permission: 'view_content_views',
         controller: 'ContentViewVersionContentController',
         templateUrl: 'content-views/versions/views/content-view-version-deb.html',
+        ncyBreadcrumb: {
+            label: '{{ "Apt Repositories" | translate }}',
+            parent: 'content-view.version.details'
+        }
+    })
+    .state('content-view.version.debs', {
+        url: '/debs',
+        permission: 'view_content_views',
+        controller: 'ContentViewVersionContentController',
+        templateUrl: 'content-views/versions/views/content-view-version-debs.html',
         ncyBreadcrumb: {
             label: '{{ "Deb" | translate }}',
             parent: 'content-view.version.details'
